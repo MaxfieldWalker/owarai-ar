@@ -12,6 +12,8 @@
   },
   "license": "",
   "dependencies": {
+    "@google/maps": "^0.4.5",
+    "@types/googlemaps": "^3.30.7",
     "axios": "^0.18.0",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
