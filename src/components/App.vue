@@ -22,15 +22,56 @@
         <div class="subheader">
             <p>この辺にあるツッコミポイント</p>
         </div>
+        <div>
+          <tukkomi-list-item v-for="item in data"
+           :subject="item.subject"
+            :key="item.id"
+            :rank="item.rank"
+            >
+          </tukkomi-list-item>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import Component from "vue-class-component";
-
-@Component({})
-export default class App extends Vue {}
+import TukkomiListItem from "./tukkomiListItem.vue";
+export default Vue.extend({
+  name: "App",
+  components: {
+    TukkomiListItem
+  },
+  data() {
+    return {
+      data: [
+        {
+          subject: "普通の家やんけ",
+          id: "001",
+          image: "images/dotonbori_blur.png",
+          rank: 1
+        },
+        {
+          subject: "誰やねんこれ！",
+          id: "002",
+          image: "images/dotonbori_blur.png",
+          rank: 2
+        },
+        {
+          subject: "笑いの殿堂やないか！",
+          id: "003",
+          image: "images/dotonbori_blur.png",
+          rank: 3
+        },
+        {
+          subject: "ありえへんやろ！",
+          id: "004",
+          image: "images/dotonbori_blur.png",
+          rank: 4
+        }
+      ]
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>
