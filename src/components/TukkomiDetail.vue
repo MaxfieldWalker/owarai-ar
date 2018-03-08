@@ -28,7 +28,7 @@
                 <!--
                 <div id="like-button"><img src="images/like.png" width="100%"></div>
                 -->
-                <span id="like-button-bg">🤣ほんまそれ</span>
+                <span id="like-button">🤣ほんまそれ</span>
                 <span id="like-count">334</span>
             </div>
         </div>
@@ -167,7 +167,7 @@ img.avatar {
             float: left;
         }
         */
-        #like-button-bg {
+        #like-button {
             padding: 4px 8px;
             background: orange;
             display: inline-block;
