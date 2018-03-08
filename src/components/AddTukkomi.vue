@@ -52,7 +52,7 @@
             </div>
 
             <div id="tukkomi-submit">
-                <input type="submit" name="" value="ツッコミをお見舞いする">
+                <input type="submit" name="" value="ツッコミをお見舞い">
             </div>
         </form>
 
