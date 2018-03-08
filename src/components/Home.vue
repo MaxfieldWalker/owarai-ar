@@ -1,17 +1,7 @@
 <template>
     <div>
-        <!-- アプリヘッダ -->
-        <div id="header-wrapper">
-            <div class="sub">
-                <img class="user-avatar" src="images/avatar.jpg">
-            </div>
-            <div class="main">
-                <p class="appbar-title">お笑いAR</p>
-            </div>
-            <div class="sub">
-                <p>+</p>
-            </div>
-        </div>
+      <app-header title="みんなのツッコミMAP">
+      </app-header>
         <!-- マップ -->
         <div id="google-map">
            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11278.640573196893!2d135.4963911622769!3d34.6721549189598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e71526dc6083%3A0xe43d6b861e80b709!2z44CSNTQyLTAwNzEg5aSn6Ziq5bqc5aSn6Ziq5biC5Lit5aSu5Yy66YGT6aCT5aCA!5e0!3m2!1sja!2sjp!4v1520502552924"
@@ -36,10 +26,13 @@
 <script lang="ts">
 import Vue from "vue";
 import TukkomiListItem from "./tukkomiListItem.vue";
+import AppHeader from "./AppHeader.vue";
+
 export default Vue.extend({
   name: "App",
   components: {
-    TukkomiListItem
+    TukkomiListItem,
+    AppHeader
   },
   data() {
     return {
@@ -75,26 +68,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-#header-wrapper {
-  display: flex;
-  background-color: orange;
-
-  .main {
-    flex: 1;
-
-    .appbar-title {
-      text-align: center;
-    }
-  }
-
-  .sub {
-    width: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
 #google-map {
   position: relative;
 
@@ -121,44 +94,6 @@ export default Vue.extend({
 .user-avatar {
   width: 32px;
   height: 32px;
-}
-#content-container {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 600px;
-}
-
-h1.title {
-  font-weight: 700;
-  color: gray;
-}
-
-img.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 100%;
-  margin: 0 0 20px 20px;
-  float: right;
-  shape-outside: circle();
-}
-
-.links ul {
-  list-style: none;
-  padding: 0;
-
-  li:not(:first-child) {
-    margin-top: 8px;
-  }
-
-  li a {
-    color: #000;
-    font-weight: 700;
-    text-decoration: none;
-    &:hover {
-      background: #000;
-      color: #fff;
-    }
-  }
 }
 </style>
 

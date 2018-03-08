@@ -1,18 +1,7 @@
 <template>
     <div>
-        <!-- アプリヘッダ -->
-        <div id="header-wrapper">
-            <div class="sub">
-                <img class="user-avatar" src="images/avatar.jpg">
-            </div>
-            <div class="main">
-                <p class="appbar-title">渾身のツッコミ</p>
-            </div>
-            <div class="sub">
-                <p>+</p>
-            </div>
-        </div>
-
+      <app-header title="渾身のツッコミ">
+      </app-header>
         <!-- 写真を表示 -->
         <div id="tukkomi-img-container">
             <img id="tukkomi-img" src="images/near-img.jpg" width="100%">
@@ -58,35 +47,17 @@
 
 <script lang="ts">
 import Vue from "vue";
+import AppHeader from "./AppHeader.vue";
+
 export default Vue.extend({
-  name: "TukkomiDetail"
+  name: "TukkomiDetail",
+  components: {
+    AppHeader
+  }
 });
 </script>
 
 <style lang="scss" scoped>
-#header-wrapper {
-  display: flex;
-  background-color: orange;
-
-  .main {
-    flex: 1;
-
-    .appbar-title {
-      text-align: center;
-      color: #fff;
-      font-weight: bold;
-      font-size: 120%;
-    }
-  }
-
-  .sub {
-    width: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
 .subheader {
   background-color: orange;
   padding: 2px 0;
@@ -97,44 +68,6 @@ export default Vue.extend({
   width: 32px;
   height: 32px;
   border-radius: 16px;
-}
-#content-container {
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 600px;
-}
-
-h1.title {
-  font-weight: 700;
-  color: gray;
-}
-
-img.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 100%;
-  margin: 0 0 20px 20px;
-  float: right;
-  shape-outside: circle();
-}
-
-.links ul {
-  list-style: none;
-  padding: 0;
-
-  li:not(:first-child) {
-    margin-top: 8px;
-  }
-
-  li a {
-    color: #000;
-    font-weight: 700;
-    text-decoration: none;
-    &:hover {
-      background: #000;
-      color: #fff;
-    }
-  }
 }
 
 #tukkomi-img-container {
