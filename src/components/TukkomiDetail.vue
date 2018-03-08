@@ -57,10 +57,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 export default Vue.extend({
-  name: "AddTukkomi"
-})
+  name: "TukkomiDetail"
+});
 </script>
 
 <style lang="scss" scoped>
@@ -138,105 +138,105 @@ img.avatar {
 }
 
 #tukkomi-img-container {
-    margin: 10px 0;
-    clear: both;
+  margin: 10px 0;
+  clear: both;
 
-    #tukkomi-img {
-        width: 100%;
-    }
+  #tukkomi-img {
+    width: 100%;
+  }
 }
 
 #tukkomi-text {
-    margin: -40px 0 0 0;
+  margin: -40px 0 0 0;
 
-    #tukkomi-text-area {
-        margin: -100px 10px 0 10px;
-        height: 100px;
-        font-size: 200%;
-    }
+  #tukkomi-text-area {
+    margin: -100px 10px 0 10px;
+    height: 100px;
+    font-size: 200%;
+  }
 
-    #like-button-area {
-        height: 28px;
-        margin: 5px 0 0 0;
-        position: relative;
-        vertical-align: top;
-        /*
+  #like-button-area {
+    height: 28px;
+    margin: 5px 0 0 0;
+    position: relative;
+    vertical-align: top;
+    /*
         #like-button {
             width: 120px;
             height: 28px;
             float: left;
         }
         */
-        #like-button {
-            padding: 4px 8px;
-            background: orange;
-            display: inline-block;
-            vertical-align: inherit;
-            color: #fff;
-            font-size: 100%;
-            font-weight: bold;
-            border-radius: 5px;
-            line-height: 20px;
-        }
-        #like-count {
-            height: 28px;
-            margin: 0 0 0 5px;
-            display: inline-block;
-            font-weight: bold;
-            font-size: 200%;
-            line-height: 28px;
-            color: orange;
-        }
+    #like-button {
+      padding: 4px 8px;
+      background: orange;
+      display: inline-block;
+      vertical-align: inherit;
+      color: #fff;
+      font-size: 100%;
+      font-weight: bold;
+      border-radius: 5px;
+      line-height: 20px;
     }
+    #like-count {
+      height: 28px;
+      margin: 0 0 0 5px;
+      display: inline-block;
+      font-weight: bold;
+      font-size: 200%;
+      line-height: 28px;
+      color: orange;
+    }
+  }
 }
 
 #tukkomi-author {
-    clear: both;
-    margin: 10px 0;
-    padding: 10px;
-    background: #fff1e6;
+  clear: both;
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff1e6;
 
-    #author-intro {
-        margin: 0 0 10px 0;
-        color: orange;
-        font-weight: bold;
-    }
+  #author-intro {
+    margin: 0 0 10px 0;
+    color: orange;
+    font-weight: bold;
+  }
 
-    #author-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 25px;
-        float: left;
-        overflow: hidden;
-    }
+  #author-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    float: left;
+    overflow: hidden;
+  }
 
-    #author-name {
-        margin: 0 0 0 60px;
-        font-weight: bold;
-    }
+  #author-name {
+    margin: 0 0 0 60px;
+    font-weight: bold;
+  }
 
-    #author-bio {
-        margin: 0 0 0 60px;
-        font-size: 80%;
-    }
+  #author-bio {
+    margin: 0 0 0 60px;
+    font-size: 80%;
+  }
 }
 
 #tukkomi-submit {
-    margin: 10px 0;
+  margin: 10px 0;
 
-    #more-tukkomi-q {
-        color: orange;
-        font-weight: bold;
-    }
+  #more-tukkomi-q {
+    color: orange;
+    font-weight: bold;
+  }
 
-    input[type="button"] {
-        width: 100%;
-        background: orange;
-        border: none;
-        color: #fff;
-        font-size: 200%;
-        font-weight: bold;
-        border-radius: 5px;
-    }
+  input[type="button"] {
+    width: 100%;
+    background: orange;
+    border: none;
+    color: #fff;
+    font-size: 200%;
+    font-weight: bold;
+    border-radius: 5px;
+  }
 }
 </style>
