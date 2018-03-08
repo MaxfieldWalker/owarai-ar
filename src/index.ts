@@ -1,12 +1,12 @@
 import Vue from "vue";
-import App from "./components/app.vue";
+import AddTukkomi from "./components/addTukkomi.vue";
 import store from "./vuex/store";
 
 const v = new Vue({
     el: "#app",
     store,
     components: {
-        App
+        AddTukkomi
     },
-    template: `<app></app>`,
+    template: `<add-tukkomi></add-tukkomi>`,
 });
