@@ -29,7 +29,7 @@
 import Vue from "vue";
 import TukkomiListItem from "./tukkomiListItem.vue";
 import AppHeader from "./AppHeader.vue";
-
+import {} from "@types/googlemaps";
 
 export default Vue.extend({
   name: "App",
@@ -66,19 +66,36 @@ export default Vue.extend({
         }
       ]
     };
+  },
+  methods: {
+    // Google MAP APIの利用
+    initMap() {
+      var uluru = { lat: -25.363, lng: 131.044 };
+      var map = new google.maps.Map(document.getElementById("google-map"), {
+        zoom: 4,
+        center: uluru
+      });
+      var marker = new google.maps.Marker({
+        position: uluru,
+        map: map
+      });
+    }
+  },
+  mounted() {
+    this.initMap();
   }
 });
 // 現在位置の取得
 navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
 
-	// 取得成功
-	function geoSuccess(position) {
-		// 緯度
-		var lat = position.coords.latitude;
-		// 経度
-    var lng = position.coords.longitude;
-    console.log(lat + ", " + lng);
-    /*
+// 取得成功
+function geoSuccess(position) {
+  // 緯度
+  var lat = position.coords.latitude;
+  // 経度
+  var lng = position.coords.longitude;
+  console.log(lat + ", " + lng);
+  /*
 		//地図の作成
 		var map = new google.maps.Map(document.getElementById('google-map'), {
 			zoom: 18, //地図の倍率
@@ -90,24 +107,11 @@ navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
 			map: map //マーカーを描く地図
     });
     */
-	}
-	// 取得失敗(拒否)
-	function geoError() {
-		console.log('取得NG');
-  }
-
-  // Google MAP APIの利用
-  function initMap() {
-    var uluru = {lat: -25.363, lng: 131.044};
-    var map = new google.maps.Map(document.getElementById('google-map'), {
-      zoom: 4,
-      center: uluru
-    });
-    var marker = new google.maps.Marker({
-      position: uluru,
-      map: map
-    });
-  }
+}
+// 取得失敗(拒否)
+function geoError() {
+  console.log("取得NG");
+}
 </script>
 
 <style lang="scss" scoped>
