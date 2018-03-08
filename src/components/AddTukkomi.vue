@@ -27,8 +27,8 @@
         <form method="post" action="">
             <!-- 写真をアップロード -->
             <div id="upload-img">
-                <input type="file" name="tukkomi_img"><br>
-                <img id="img-upload" src="images/camera-upload.png" width="100%">
+                <input type="file" name="tukkomi_img" ref="image-input" v-on:change="onPhotoChanged" ><br>
+                <img id="img-upload" src="images/camera-upload.png" width="100%" ref="img-upload">
             </div>
 
             <!-- ツッコミを入力 -->
@@ -61,6 +61,25 @@ export default Vue.extend({
   name: "AddTukkomi",
   components: {
     AppHeader
+  },
+  methods: {
+    onPhotoChanged(el) {
+      var target = el.target;
+      const file = target.files[0];
+      const type = file.type;
+      const size = file.size;
+
+      const reader = new FileReader();
+      reader.addEventListener(
+        "load",
+        event => {
+          const base64 = (event.target as any).result;
+          (this.$refs["img-upload"] as any).src = base64;
+        },
+        false
+      );
+      reader.readAsDataURL(file);
+    }
   }
 });
 </script>
