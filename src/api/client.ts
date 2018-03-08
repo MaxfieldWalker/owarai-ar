@@ -50,6 +50,7 @@ export class ApiClient {
      * @param spotImgId スポットの既存画像 (spotImg, spotImgId のいずれかが空値)
      */
     async addTukkomi(
+        spotId: number,
         spotLat: number,
         spotLong: number,
         spotImg: string, // Base64文字列
@@ -137,12 +138,7 @@ interface DuplicatedSpot {
     tukkomi_id: number;
 
     /**
-     * スポットの緯度 (-90 ~ 90)
+     * スポットの ID
      */
-    spot_lat: number;
-
-    /**
-     * スポットの経度 (-180 ~ 180)
-     */
-    spot_long: number;
+    spot_id: number;
 }
