@@ -34,23 +34,27 @@
             </div>
         </div>
 
-        <!-- 写真をアップロード -->
-        <div id="upload-img">
-            <form method="post" action="">
+        <form method="post" action="">
+            <!-- 写真をアップロード -->
+            <div id="upload-img">
                 <input type="file" name="tukkomi_img"><br>
                 <img id="img-upload" src="images/camera-upload.png" width="100%">
-            </form>
-        </div>
+            </div>
 
-        <!-- ツッコミを入力 -->
-        <div id="tukkomi-text">
-            <div id="tukkomi-bg">
-                <img id="img-upload" src="images/tukkomi-input.png" width="100%">
+            <!-- ツッコミを入力 -->
+            <div id="tukkomi-text">
+                <div id="tukkomi-bg">
+                    <img id="img-upload" src="images/tukkomi-input.png" width="100%">
+                </div>
+                <div id="tukkomi-text-area">
+                    <textarea type="text" name="tukkomi-text">ツッコミを入力(60文字)</textarea>
+                </div>
             </div>
-            <div id="tukkomi-text-area">
-                <textarea type="text" name="tukkomi-text">ツッコミを入力(60文字)</textarea>
+
+            <div id="tukkomi-submit">
+                <input type="submit" name="" value="ツッコミをお見舞いする">
             </div>
-        </div>
+        </form>
 
         <div class="subheader">
         </div>
@@ -175,6 +179,18 @@ img.avatar {
             font-size: 200%;
             vertical-align: top;
         }
+    }
+}
+#tukkomi-submit{
+    margin: 10px 0;
+
+    input[type="submit"] {
+        width: 100%;
+        background: orange;
+        border: none;
+        color: #fff;
+        font-size: 200%;
+        font-weight: bold;
     }
 }
 </style>
