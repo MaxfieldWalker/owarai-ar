@@ -25,8 +25,11 @@
             </div>
             <div id="tukkomi-text-area">普通の家やんけ！</div>
             <div id="like-button-area">
+                <!--
                 <div id="like-button"><img src="images/like.png" width="100%"></div>
-                <div id="like-count">334</div>
+                -->
+                <span id="like-button-bg">🤣ほんまそれ</span>
+                <span id="like-count">334</span>
             </div>
         </div>
 
@@ -153,23 +156,35 @@ img.avatar {
     }
 
     #like-button-area {
-        width: 180px;
         height: 28px;
-        margin: 0;
+        margin: 5px 0 0 0;
         position: relative;
-        vertical-align: middle;
-
+        vertical-align: top;
+        /*
         #like-button {
             width: 120px;
             height: 28px;
             float: left;
         }
-        #like-count {
-            margin: 0 0 0 130px;
+        */
+        #like-button-bg {
+            padding: 4px 8px;
+            background: orange;
+            display: inline-block;
+            vertical-align: inherit;
+            color: #fff;
+            font-size: 100%;
             font-weight: bold;
-            font-size: 180%;
+            border-radius: 5px;
+            line-height: 20px;
+        }
+        #like-count {
+            height: 28px;
+            margin: 0 0 0 5px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 200%;
             line-height: 28px;
-            text-align: right;
             color: orange;
         }
     }
