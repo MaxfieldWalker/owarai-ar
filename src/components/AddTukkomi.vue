@@ -72,9 +72,6 @@ export default Vue.extend({
 
 
 <style lang="scss" scoped>
-body {
-    margin: 0;
-}
 #header-wrapper {
   display: flex;
   background-color: orange;
