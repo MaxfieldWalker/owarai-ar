@@ -6,11 +6,11 @@
     </div>
     <div class="content">
         <p class="subject">{{ subject }}</p>
-        <button class="button-detail">
+        <button class="button-detail" v-on:click="onTukkomiDetailButtonClicked">
             気になんなあ >>
         </button>
     </div>
-    <img class="spot-image" src="images/dotonbori_blur.png" />
+    <img class="spot-image" :src="image" />
 </div>
 </div>
 </template>
@@ -19,7 +19,7 @@
 import Vue from "vue";
 export default Vue.extend({
   name: "TukkomiListItem",
-  props: ["subject", "rank"],
+  props: ["subject", "rank", "image", "onTukkomiDetailButtonClicked"],
   data() {
     return {
       tukkomis: []

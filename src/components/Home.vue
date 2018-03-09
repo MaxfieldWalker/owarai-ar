@@ -3,21 +3,17 @@
       <app-header title="みんなのツッコミMAP">
       </app-header>
         <!-- マップ -->
-        <div id="google-map">
-           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11278.640573196893!2d135.4963911622769!3d34.6721549189598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e71526dc6083%3A0xe43d6b861e80b709!2z44CSNTQyLTAwNzEg5aSn6Ziq5bqc5aSn6Ziq5biC5Lit5aSu5Yy66YGT6aCT5aCA!5e0!3m2!1sja!2sjp!4v1520502552924"
-            frameborder="0"
-            style="border:0">
-           </iframe> 
-        </div>
+        <div id="google-map"></div>
         <div class="subheader">
             <p>この辺にあるツッコミポイント</p>
         </div>
         <div>
-          <tukkomi-list-item v-for="item in data"
+          <tukkomi-list-item v-for="item in tukkomiData"
            :subject="item.subject"
             :key="item.id"
             :rank="item.rank"
-            >
+            :image="item.image"
+            :on-tukkomi-detail-button-clicked="tukkomiDetailButton(item)">
           </tukkomi-list-item>
         </div>
     </div>
@@ -27,6 +23,22 @@
 import Vue from "vue";
 import TukkomiListItem from "./tukkomiListItem.vue";
 import AppHeader from "./AppHeader.vue";
+import {} from "@types/googlemaps";
+import { ApiClient } from "../api/client";
+
+interface IData {
+  tukkomiData: Array<{
+    subject: string;
+    id: number;
+    image: string;
+    rank: number;
+  }>;
+
+  /**
+   * Google Maps の DOM要素
+   */
+  map: any;
+}
 
 export default Vue.extend({
   name: "App",
@@ -34,37 +46,114 @@ export default Vue.extend({
     TukkomiListItem,
     AppHeader
   },
-  data() {
+  data(): IData {
     return {
-      data: [
+      tukkomiData: [
         {
-          subject: "普通の家やんけ",
-          id: "001",
-          image: "images/dotonbori_blur.png",
-          rank: 1
-        },
-        {
-          subject: "誰やねんこれ！",
-          id: "002",
-          image: "images/dotonbori_blur.png",
-          rank: 2
-        },
-        {
-          subject: "笑いの殿堂やないか！",
-          id: "003",
-          image: "images/dotonbori_blur.png",
-          rank: 3
-        },
-        {
-          subject: "ありえへんやろ！",
-          id: "004",
-          image: "images/dotonbori_blur.png",
-          rank: 4
+          subject: "ダミーツッコミ",
+          id: 1,
+          image: "images/camera-upload.png",
+          rank: 0
         }
-      ]
+      ],
+      map: undefined
     };
+  },
+  methods: {
+    tukkomiDetailButton(tukkomi) {
+      console.log(tukkomi);
+      const router = this.$router;
+      return function() {
+        console.log(`click tukkomi: ${tukkomi.id}`);
+        // 画面遷移
+        router.push({
+          path: `/tukkomi/${tukkomi.id}`
+        });
+      };
+    },
+    getCurrentPosition(): Promise<GeoPosition> {
+      return new Promise(resolve => {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            console.log(lat + ", " + lng);
+            resolve({
+              latitude: lat,
+              longitude: lng
+            });
+          },
+          () => {
+            console.log("取得NG");
+            resolve({ latitude: 0, longitude: 0 });
+          }
+        );
+      });
+    },
+    addMapPin(map: any, lat: number, lng: number, rank: number = 0) {
+      // マーカーのインスタンス
+      new google.maps.Marker({
+        position: {
+          lat: lat + Math.random() * 0.5,
+          lng: lng + Math.random() * 0.5
+        }, // マーカーの位置
+        map // マーカーを描く地図
+      });
+    }
+  },
+
+  async mounted() {
+    const client = new ApiClient();
+    console.log("位置情報取得中");
+    const currentPosition = await this.getCurrentPosition();
+    console.log("API 呼び出し中");
+    const response = await client.fetchList(
+      currentPosition.latitude,
+      currentPosition.longitude
+    );
+    console.log("API 呼び出し完了");
+    console.log(response);
+
+    const sorted = response.sort((a, b) => a.likes - b.likes);
+    this.$data.tukkomiData = sorted.map(x => ({
+      subject: x.content,
+      id: x.id,
+      image: `https://oguemon.com/owarai-map/img/${x.photoId}.png`,
+      rank: sorted.indexOf(x) + 1
+    }));
+
+    // 現在地周辺の地図を描画する
+    this.getCurrentPosition().then(result => {
+      const { latitude, longitude } = result;
+      // 地図の作成
+      const map = new google.maps.Map(document.getElementById("google-map"), {
+        zoom: 18, // 地図の倍率
+        center: { lat: latitude, lng: longitude } // 中心の座標
+      });
+      console.log("マップ描画完了");
+      this.$data.map = map;
+
+      // ツッコミスポットのマーカーを複数配置
+      for (const x of response) {
+        console.log("マーカーを描画します");
+        console.log(map);
+
+        const position = new google.maps.LatLng(x.latitude, x.longitude, true);
+        console.log(position.toString());
+        const marker = new google.maps.Marker({
+          position: position,
+          map: map
+        });
+        // this.addMapPin(map, x.latitude, x.longitude);
+      }
+    });
   }
 });
+
+interface GeoPosition {
+  latitude: number;
+  longitude: number;
+}
 </script>
 
 <style lang="scss" scoped>

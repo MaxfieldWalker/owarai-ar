@@ -7,26 +7,34 @@ function deserializeResponse<T>(response: AxiosResponse<any>): T {
 }
 
 export class ApiClient {
+
+    apiURL: string = "https://oguemon.com/owarai-map/api.php";
+
     /**
      * つっこみのデータの一覧を取得
     */
-    async fetchList(): Promise<FetchListResponse> {
-        const res = await axios.post("/api.php", {
-            req: "fetch_list"
-        });
+    async fetchList(lat: number, long: number): Promise<FetchListResponse> {
+        const params = new URLSearchParams();
+        params.append("req", "fetch_list");
+        params.append("lat", String(lat));
+        params.append("long", String(long));
 
-        return deserializeResponse(res);
+        const res = await axios.post(this.apiURL, params);
+
+        return res.data;
     }
 
     /**
      * つっこみの詳細情報を取得
      */
     async fetchTukkomiDetail(tukkomiId: string): Promise<TukkomiDetail> {
-        const res = await axios.post("/api.php", {
-            req: "fetch_tukkomi_detail"
-        });
+        const params = new URLSearchParams();
+        params.append("req", "tukkomi");
+        params.append("tukkomi_id", tukkomiId);
 
-        return deserializeResponse(res);
+        const res = await axios.post(this.apiURL, params);
+
+        return res.data;
     }
 
     /**
@@ -35,11 +43,13 @@ export class ApiClient {
      * @param longitude スポットの経度
      */
     async fetchSameSpot(latitude: number, longitude: number): Promise<FetchSameReponse> {
-        const res = await axios.post("/api.php", {
-            req: "fetch_same"
-        });
+        const params = new URLSearchParams();
+        params.append("req", "fetch_same");
+        params.append("lat", String(latitude));
+        params.append("long", String(longitude));
+        const res = await axios.post(this.apiURL, params);
 
-        return deserializeResponse(res);
+        return res.data;
     }
 
     /**
@@ -50,14 +60,25 @@ export class ApiClient {
      * @param spotImgId スポットの既存画像 (spotImg, spotImgId のいずれかが空値)
      */
     async addTukkomi(
-        spotId: number,
+        spotId: number | null,
         spotLat: number,
         spotLong: number,
         spotImg: string, // Base64文字列
-        spotImgId: string): Promise<boolean> {
-        const res = await axios.post("/api.php", {
-            req: "add_tukkomi"
-        });
+        spotImgId: string,
+        tukkomiWord: string,
+        userId: number
+    ): Promise<boolean> {
+
+        const params = new URLSearchParams();
+        params.append("req", "add_tukkomi");
+        params.append("spot_id", String(spotId));
+        params.append("spot_lat", String(spotLat));
+        params.append("spot_long", String(spotLong));
+        params.append("img", spotImg);
+        params.append("img_id", spotImgId);
+        params.append("tukkomi_word", tukkomiWord);
+        params.append("user_id", String(userId));
+        const res = await axios.post(this.apiURL, params);
 
         return true;
     }
@@ -68,40 +89,45 @@ interface TukkomiItemResponse {
     /**
      * つっこみの内容
      */
-    tukkomi_word: string;
+    content: string;
 
     /**
      * つっこみの画像
      */
-    tukkomi_img: string;
+    photoId: string;
 
     /**
      * つっこみのID
      */
 
-    tukkomi_id: string;
+    id: number;
 
     /**
      * 緯度 -90 ~ 90
      */
-    spot_lat: number;
+    latitude: number;
 
     /**
      * 経度 -180 ~ 180
      */
-    spot_long: number;
+    longitude: number;
+
+    /**
+     * いいねされた数
+     */
+    likes: number;
 }
 
 interface TukkomiDetail {
     /**
      * つっこみの内容
      */
-    tukkomi_word: string;
+    content: string;
 
     /**
      * つっこみの画像
      */
-    tukkomi_img: string;
+    photoId: string;
 
     /**
      * Like数
@@ -111,17 +137,17 @@ interface TukkomiDetail {
     /**
      * ユーザー名
      */
-    user_name: string;
+    name: string;
 
     /**
      * ユーザーの画像
      */
-    user_img: string;
+    img: string;
 
     /**
      * ユーザーの自己紹介
      */
-    user_bio: string;
+    bio: string;
 }
 
 
