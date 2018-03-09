@@ -37,7 +37,10 @@
                     <img id="img-upload" src="images/tukkomi-input.png" width="100%">
                 </div>
                 <div id="tukkomi-text-area">
-                    <textarea type="text" name="tukkomi-text">ツッコミを入力(60文字)</textarea>
+                    <textarea
+                    type="text"
+                    name="tukkomi-text"
+                    placeholder="ツッコミを入力(60字まで)"></textarea>
                 </div>
             </div>
 
@@ -64,7 +67,7 @@ export default Vue.extend({
   },
   methods: {
     onPhotoChanged(el) {
-      var target = el.target;
+      const target = el.target;
       const file = target.files[0];
       const type = file.type;
       const size = file.size;
