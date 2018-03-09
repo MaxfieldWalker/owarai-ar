@@ -3,12 +3,7 @@
       <app-header title="みんなのツッコミMAP">
       </app-header>
         <!-- マップ -->
-        <div id="google-map">
-           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11278.640573196893!2d135.4963911622769!3d34.6721549189598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e71526dc6083%3A0xe43d6b861e80b709!2z44CSNTQyLTAwNzEg5aSn6Ziq5bqc5aSn6Ziq5biC5Lit5aSu5Yy66YGT6aCT5aCA!5e0!3m2!1sja!2sjp!4v1520502552924"
-            frameborder="0"
-            style="border:0">
-           </iframe> 
-        </div>
+        <div id="google-map"></div>
         <div class="subheader">
             <p>この辺にあるツッコミポイント</p>
         </div>
@@ -27,6 +22,8 @@
 import Vue from "vue";
 import TukkomiListItem from "./tukkomiListItem.vue";
 import AppHeader from "./AppHeader.vue";
+import {} from "@types/googlemaps";
+import { ApiClient } from "../api/client";
 
 export default Vue.extend({
   name: "App",
@@ -63,8 +60,92 @@ export default Vue.extend({
         }
       ]
     };
+  },
+  methods: {
+  },
+  mounted() {
   }
 });
+
+// 現在位置の取得
+let lat; // 緯度
+let lng; // 経度
+navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+
+// 取得成功
+function geoSuccess(position) {
+  lat = position.coords.latitude;
+  lng = position.coords.longitude;
+  console.log(lat + ", " + lng);
+  
+  //地図の作成
+  var map = new google.maps.Map(document.getElementById('google-map'), {
+    zoom: 18, //地図の倍率
+    center: {lat: lat, lng: lng} //中心の座標
+  });
+  //マーカーのインスタンス
+  var marker = new google.maps.Marker({
+    position: {lat: lat, lng: lng}, //マーカーの位置
+    map: map //マーカーを描く地図
+  });
+}
+// 取得失敗(拒否)
+function geoError() {
+  console.log("取得NG");
+}
+
+//JSONデータをPOSTメソッドで送れる文字列に変換
+function encodeURLParm(data): string
+{
+    let params: string[] = [];
+    for(var name in data){
+        let value = data[name];
+        let param: string = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+        params.push(param);
+    }
+    return params.join('&').replace(/%20/g, '+');
+}
+
+//非同期通信（前回の講義で扱いました）
+let res_data; // 返ってきたJSONデータを格納する
+
+let api = new ApiClient();
+let json = api.fetchList();
+console.log(json);
+/*
+let data = {
+  "req": "fetch_list",
+  "lat": lat,
+  "long": lng
+};
+const url = 'http://localhost/owarai-ar-api/api.php';
+const send_str = encodeURLParm(data);    
+const xhr = new XMLHttpRequest();
+xhr.open("post", url, true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.send(send_str);
+xhr.onreadystatechange = function() {
+  // データ受信完了.
+  if ( xhr.readyState == 4) {
+    if(xhr.status == 200 || xhr.status == 304){
+      //サーバーから帰ってきたメッセージをHTMLで表示
+      res_data = xhr.response;
+      addMapPin();
+      //サーバーからのメッセージ的に登録失敗が判った
+      if(xhr.response != '登録成功'){
+        console.log("登録に失敗しました…");
+      }
+    }else{
+      //エラーメッセージをコンソールで表示
+      console.log('Failed. HttpStatus: ' + xhr.statusText);
+    }
+  }
+}
+
+function addMapPin () {
+  
+}
+*/
 </script>
 
 <style lang="scss" scoped>

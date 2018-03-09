@@ -11,7 +11,7 @@ export class ApiClient {
      * つっこみのデータの一覧を取得
     */
     async fetchList(): Promise<FetchListResponse> {
-        const res = await axios.post("/api.php", {
+        const res = await axios.post("localhost:8080/owarai-ar-api/api.php", {
             req: "fetch_list"
         });
 
