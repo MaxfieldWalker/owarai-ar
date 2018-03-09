@@ -39,20 +39,32 @@
         </div>
 
         <div class="subheader">
+          {{ tukkomiId }}
         </div>
-
-
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import AppHeader from "./AppHeader.vue";
+import { ApiClient } from "../api/client";
 
 export default Vue.extend({
   name: "TukkomiDetail",
   components: {
     AppHeader
+  },
+  props: ["tukkomiId"],
+  methods: {
+    func() {
+      console.log("hello");
+      this.$props["tukkomiId"];
+    },
+    callDetailData() {
+      const api = new ApiClient();
+      const json = api.fetchTukkomiDetail(String(2));
+      console.log(json);
+    }
   }
 });
 </script>

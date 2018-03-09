@@ -13,7 +13,7 @@
             :key="item.id"
             :rank="item.rank"
             :image="item.image"
-            :on-tukkomi-detail-button-clicked="tukkomiDetailButton(item.id)">
+            :on-tukkomi-detail-button-clicked="tukkomiDetailButton(item)">
           </tukkomi-list-item>
         </div>
     </div>
@@ -33,6 +33,11 @@ interface IData {
     image: string;
     rank: number;
   }>;
+
+  /**
+   * Google Maps の DOM要素
+   */
+  map: any;
 }
 
 export default Vue.extend({
@@ -50,19 +55,57 @@ export default Vue.extend({
           image: "images/camera-upload.png",
           rank: 0
         }
-      ]
+      ],
+      map: undefined
     };
   },
   methods: {
-    tukkomiDetailButton(tukkomiId: number) {
+    tukkomiDetailButton(tukkomi) {
+      console.log(tukkomi);
+      const router = this.$router;
       return function() {
-        console.log(`click tukkomi: ${tukkomiId}`);
+        console.log(`click tukkomi: ${tukkomi.id}`);
+        // 画面遷移
+        router.push({
+          path: `/tukkomi/${tukkomi.id}`
+        });
       };
+    },
+    getCurrentPosition(): Promise<GeoPosition> {
+      return new Promise(resolve => {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            console.log(lat + ", " + lng);
+            resolve({
+              latitude: lat,
+              longitude: lng
+            });
+          },
+          () => {
+            console.log("取得NG");
+            resolve({ latitude: 0, longitude: 0 });
+          }
+        );
+      });
+    },
+    addMapPin(map: any, lat: number, lng: number, rank: number = 0) {
+      // マーカーのインスタンス
+      new google.maps.Marker({
+        position: {
+          lat: lat + Math.random() * 0.5,
+          lng: lng + Math.random() * 0.5
+        }, // マーカーの位置
+        map // マーカーを描く地図
+      });
     }
   },
+
   async mounted() {
     const client = new ApiClient();
-    const currentPosition = await getCurrentPosition();
+    console.log("位置情報取得中");
+    const currentPosition = await this.getCurrentPosition();
     console.log("API 呼び出し中");
     const response = await client.fetchList(
       currentPosition.latitude,
@@ -71,58 +114,45 @@ export default Vue.extend({
     console.log("API 呼び出し完了");
     console.log(response);
 
-    this.$data.tukkomiData = response
-      .sort((a, b) => a.likes - b.likes)
-      .map(x => ({
-        subject: x.content,
-        id: x.tukkomi_id,
-        image: `https://oguemon.com/owarai/img/${x.photoId}.png`,
-        rank: 1
-      }));
+    const sorted = response.sort((a, b) => a.likes - b.likes);
+    this.$data.tukkomiData = sorted.map(x => ({
+      subject: x.content,
+      id: x.id,
+      image: `https://oguemon.com/owarai-map/img/${x.photoId}.png`,
+      rank: sorted.indexOf(x) + 1
+    }));
+
+    // 現在地周辺の地図を描画する
+    this.getCurrentPosition().then(result => {
+      const { latitude, longitude } = result;
+      // 地図の作成
+      const map = new google.maps.Map(document.getElementById("google-map"), {
+        zoom: 18, // 地図の倍率
+        center: { lat: latitude, lng: longitude } // 中心の座標
+      });
+      console.log("マップ描画完了");
+      this.$data.map = map;
+
+      // ツッコミスポットのマーカーを複数配置
+      for (const x of response) {
+        console.log("マーカーを描画します");
+        console.log(map);
+
+        const position = new google.maps.LatLng(x.latitude, x.longitude, true);
+        console.log(position.toString());
+        const marker = new google.maps.Marker({
+          position: position,
+          map: map
+        });
+        // this.addMapPin(map, x.latitude, x.longitude);
+      }
+    });
   }
 });
 
 interface GeoPosition {
   latitude: number;
   longitude: number;
-}
-
-// 現在地周辺の地図を描画する
-getCurrentPosition().then(result => {
-  const { latitude, longitude } = result;
-  // 地図の作成
-  const map = new google.maps.Map(document.getElementById("google-map"), {
-    zoom: 18, // 地図の倍率
-    center: { lat: latitude, lng: longitude } // 中心の座標
-  });
-  // マーカーのインスタンス
-  const marker = new google.maps.Marker({
-    position: { lat: latitude, lng: longitude }, // マーカーの位置
-    map: map // マーカーを描く地図
-  });
-});
-
-/**
- * 現在地を取得します
- */
-function getCurrentPosition(): Promise<GeoPosition> {
-  return new Promise(resolve => {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        resolve({
-          latitude: lat,
-          longitude: lng
-        });
-        console.log(lat + ", " + lng);
-      },
-      () => {
-        resolve({ latitude: 0, longitude: 0 });
-        console.log("取得NG");
-      }
-    );
-  });
 }
 </script>
 
