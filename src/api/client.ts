@@ -29,7 +29,7 @@ export class ApiClient {
      */
     async fetchTukkomiDetail(tukkomiId: string): Promise<TukkomiDetail> {
         const params = new URLSearchParams();
-        params.append("req", "fetch_tukkomi_detail");
+        params.append("req", "tukkomi");
         params.append("tukkomi_id", tukkomiId);
 
         const res = await axios.post(this.apiURL, params);
@@ -122,12 +122,12 @@ interface TukkomiDetail {
     /**
      * つっこみの内容
      */
-    tukkomi_word: string;
+    content: string;
 
     /**
      * つっこみの画像
      */
-    tukkomi_img: string;
+    photoId: string;
 
     /**
      * Like数
@@ -137,17 +137,17 @@ interface TukkomiDetail {
     /**
      * ユーザー名
      */
-    user_name: string;
+    name: string;
 
     /**
      * ユーザーの画像
      */
-    user_img: string;
+    img: string;
 
     /**
      * ユーザーの自己紹介
      */
-    user_bio: string;
+    bio: string;
 }
 
 

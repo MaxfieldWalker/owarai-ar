@@ -4,7 +4,7 @@
       </app-header>
         <!-- 写真を表示 -->
         <div id="tukkomi-img-container">
-            <img id="tukkomi-img" src="images/near-img.jpg" width="100%">
+            <img id="tukkomi-img" :src="tukkomiImg" width="100%">
         </div>
 
         <!-- ツッコミを表示 -->
@@ -12,13 +12,13 @@
             <div id="tukkomi-bg">
                 <img id="img-upload" src="images/tukkomi-input.png" width="100%">
             </div>
-            <div id="tukkomi-text-area">普通の家やんけ！</div>
+            <div id="tukkomi-text-area">{{ content }}</div>
             <div id="like-button-area">
                 <!--
                 <div id="like-button"><img src="images/like.png" width="100%"></div>
                 -->
-                <span id="like-button">🤣ほんまそれ</span>
-                <span id="like-count">334</span>
+                <span id="like-button" v-on:click="honmasore">🤣ほんまそれ</span>
+                <span id="like-count">{{ likecount }}</span>
             </div>
         </div>
 
@@ -26,10 +26,10 @@
         <div id="tukkomi-author">
             <div id="author-intro">私がこのツッコミをいたしました。</div>
             <div id="author-icon">
-                <img src="images/author-icon.jpg" width="100%">
+                <img :src="userimg" width="100%">
             </div>
-            <div id="author-name">おっぐ</div>
-            <div id="author-bio">プログラミング大好きです！よろしくお願いします！…</div>
+            <div id="author-name">{{ username }}</div>
+            <div id="author-bio">{{ userbio }}</div>
         </div>
 
         <!-- ツッコミ追加のボタン -->
@@ -54,7 +54,21 @@ export default Vue.extend({
   components: {
     AppHeader
   },
-  props: ["tukkomiId"],
+  props: {
+    tukkomiId: {
+      type: Number
+    }
+  },
+  data: function() {
+    return {
+      username: "User",
+      userimg: "",
+      userbio: "",
+      tukkomiImg: "",
+      content: "",
+      likecount: 334
+    };
+  },
   methods: {
     func() {
       console.log("hello");
@@ -64,7 +78,27 @@ export default Vue.extend({
       const api = new ApiClient();
       const json = api.fetchTukkomiDetail(String(2));
       console.log(json);
+    },
+    honmasore() {
+      this.$data.likecount += 1;
     }
+  },
+  async mounted() {
+    const tukkomiId = this.$route.params.id;
+    const api = new ApiClient();
+    const response = await api.fetchTukkomiDetail(tukkomiId);
+
+    console.log(response);
+
+    this.$data.username = response.name;
+    this.$data.userimg = `https://oguemon.com/owarai-map/img/${
+      response.img
+    }.png`;
+    this.$data.userbio = response.bio;
+    this.$data.tukkomiImg = `https://oguemon.com/owarai-map/img/${
+      response.photoId
+    }.png`;
+    this.$data.content = response.content;
   }
 });
 </script>

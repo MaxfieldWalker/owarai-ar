@@ -51,7 +51,7 @@ export default Vue.extend({
       tukkomiData: [
         {
           subject: "ダミーツッコミ",
-          id: 999,
+          id: 1,
           image: "images/camera-upload.png",
           rank: 0
         }
