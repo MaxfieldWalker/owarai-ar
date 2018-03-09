@@ -110,8 +110,9 @@ function encodeURLParm(data): string
 let res_data; // 返ってきたJSONデータを格納する
 
 let api = new ApiClient();
-let json = api.fetchList();
+let json = api.fetchList(lat, lng);
 console.log(json);
+
 /*
 let data = {
   "req": "fetch_list",

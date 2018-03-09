@@ -10,11 +10,15 @@ export class ApiClient {
     /**
      * つっこみのデータの一覧を取得
     */
-    async fetchList(): Promise<FetchListResponse> {
-        const res = await axios.post("localhost:8080/owarai-ar-api/api.php", {
-            req: "fetch_list"
-        });
+    async fetchList(lat: number, long: number): Promise<FetchListResponse> {
+        const params = new URLSearchParams();
+        params.append("req", "fetch_list");
+        params.append("lat",  String(lat));
+        params.append("long", String(long));
 
+        const res = await axios.post("https://oguemon.com/owarai-map/api.php", params);
+        console.log("response: ");
+        console.log(res);
         return deserializeResponse(res);
     }
 
