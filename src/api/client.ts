@@ -13,7 +13,7 @@ export class ApiClient {
     /**
      * つっこみのデータの一覧を取得
     */
-    async fetchList(lat: number, long: number): Promise < FetchListResponse > {
+    async fetchList(lat: number, long: number): Promise<FetchListResponse> {
         const params = new URLSearchParams();
         params.append("req", "fetch_list");
         params.append("lat",  String(lat));
@@ -27,7 +27,7 @@ export class ApiClient {
     /**
      * つっこみの詳細情報を取得
      */
-    async fetchTukkomiDetail(tukkomiId: string): Promise< TukkomiDetail > {
+    async fetchTukkomiDetail(tukkomiId: string): Promise<TukkomiDetail> {
         const params = new URLSearchParams();
         params.append("req", "fetch_tukkomi_detail");
         params.append("tukkomi_id", tukkomiId);
