@@ -61,91 +61,51 @@ export default Vue.extend({
       ]
     };
   },
-  methods: {
-  },
-  mounted() {
-  }
+  methods: {},
+  mounted() {}
 });
 
-// 現在位置の取得
-let lat; // 緯度
-let lng; // 経度
-navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+interface GeoPosition {
+  latitude: number;
+  longitude: number;
+}
 
-// 取得成功
-function geoSuccess(position) {
-  lat = position.coords.latitude;
-  lng = position.coords.longitude;
-  console.log(lat + ", " + lng);
-  
-  //地図の作成
-  var map = new google.maps.Map(document.getElementById('google-map'), {
-    zoom: 18, //地図の倍率
-    center: {lat: lat, lng: lng} //中心の座標
+const currentPosition = getCurrentPosition().then(result => {
+  const { latitude, longitude } = result;
+  // 地図の作成
+  const map = new google.maps.Map(document.getElementById("google-map"), {
+    zoom: 18, // 地図の倍率
+    center: { lat: latitude, lng: longitude } // 中心の座標
   });
-  //マーカーのインスタンス
-  var marker = new google.maps.Marker({
-    position: {lat: lat, lng: lng}, //マーカーの位置
-    map: map //マーカーを描く地図
+  // マーカーのインスタンス
+  const marker = new google.maps.Marker({
+    position: { lat: latitude, lng: longitude }, // マーカーの位置
+    map: map // マーカーを描く地図
   });
-}
-// 取得失敗(拒否)
-function geoError() {
-  console.log("取得NG");
-}
+});
 
-//JSONデータをPOSTメソッドで送れる文字列に変換
-function encodeURLParm(data): string
-{
-    let params: string[] = [];
-    for(var name in data){
-        let value = data[name];
-        let param: string = encodeURIComponent(name) + '=' + encodeURIComponent(value);
-        params.push(param);
-    }
-    return params.join('&').replace(/%20/g, '+');
-}
-
-//非同期通信（前回の講義で扱いました）
-let res_data; // 返ってきたJSONデータを格納する
-
-let api = new ApiClient();
-let json = api.fetchList();
-console.log(json);
-/*
-let data = {
-  "req": "fetch_list",
-  "lat": lat,
-  "long": lng
-};
-const url = 'http://localhost/owarai-ar-api/api.php';
-const send_str = encodeURLParm(data);    
-const xhr = new XMLHttpRequest();
-xhr.open("post", url, true);
-xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-xhr.send(send_str);
-xhr.onreadystatechange = function() {
-  // データ受信完了.
-  if ( xhr.readyState == 4) {
-    if(xhr.status == 200 || xhr.status == 304){
-      //サーバーから帰ってきたメッセージをHTMLで表示
-      res_data = xhr.response;
-      addMapPin();
-      //サーバーからのメッセージ的に登録失敗が判った
-      if(xhr.response != '登録成功'){
-        console.log("登録に失敗しました…");
+/**
+ * 現在地を取得します
+ */
+function getCurrentPosition(): Promise<GeoPosition> {
+  return new Promise(resolve => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        resolve({
+          latitude: lat,
+          longitude: lng
+        });
+        console.log(lat + ", " + lng);
+      },
+      () => {
+        resolve({ latitude: 0, longitude: 0 });
+        console.log("取得NG");
       }
-    }else{
-      //エラーメッセージをコンソールで表示
-      console.log('Failed. HttpStatus: ' + xhr.statusText);
-    }
-  }
+    );
+  });
 }
-
-function addMapPin () {
-  
-}
-*/
 </script>
 
 <style lang="scss" scoped>
