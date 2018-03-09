@@ -20,8 +20,7 @@ export class ApiClient {
         params.append("long", String(long));
 
         const res = await axios.post(this.apiURL, params);
-        console.log("response: ");
-        console.log(res);
+
         return res.data;
     }
 
@@ -29,11 +28,13 @@ export class ApiClient {
      * つっこみの詳細情報を取得
      */
     async fetchTukkomiDetail(tukkomiId: string): Promise< TukkomiDetail > {
-        const res = await axios.post(this.apiURL, {
-            req: "fetch_tukkomi_detail"
-        });
+        const params = new URLSearchParams();
+        params.append("req", "fetch_tukkomi_detail");
+        params.append("tukkomi_id", tukkomiId);
 
-        return deserializeResponse(res);
+        const res = await axios.post(this.apiURL, params);
+
+        return res.data;
     }
 
     /**
@@ -42,11 +43,13 @@ export class ApiClient {
      * @param longitude スポットの経度
      */
     async fetchSameSpot(latitude: number, longitude: number): Promise < FetchSameReponse > {
-        const res = await axios.post(this.apiURL, {
-            req: "fetch_same"
-        });
+        const params = new URLSearchParams();
+        params.append("req", "fetch_same");
+        params.append("lat", String(latitude));
+        params.append("long", String(longitude));
+        const res = await axios.post(this.apiURL, params);
 
-        return deserializeResponse(res);
+        return res.data;
     }
 
     /**
@@ -61,10 +64,21 @@ export class ApiClient {
         spotLat: number,
         spotLong: number,
         spotImg: string, // Base64文字列
-        spotImgId: string): Promise < boolean > {
-        const res = await axios.post(this.apiURL, {
-            req: "add_tukkomi"
-        });
+        spotImgId: string,
+        tukkomiWord: string,
+        userId: number
+    ): Promise < boolean > {
+
+        const params = new URLSearchParams();
+        params.append("req", "add_tukkomi");
+        params.append("spot_id", String(spotId));
+        params.append("spot_lat", String(spotLat));
+        params.append("spot_long", String(spotLong));
+        params.append("img", spotImg);
+        params.append("img_id", spotImgId);
+        params.append("tukkomi_word", tukkomiWord);
+        params.append("user_id", String(userId));
+        const res = await axios.post(this.apiURL, params);
 
         return true;
     }
