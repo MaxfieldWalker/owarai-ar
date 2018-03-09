@@ -50,7 +50,7 @@ export class ApiClient {
      * @param spotImgId スポットの既存画像 (spotImg, spotImgId のいずれかが空値)
      */
     async addTukkomi(
-        spotId: number,
+        spotId: number | null,
         spotLat: number,
         spotLong: number,
         spotImg: string, // Base64文字列

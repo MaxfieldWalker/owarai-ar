@@ -28,7 +28,9 @@
             <!-- 写真をアップロード -->
             <div id="upload-img">
                 <input type="file" name="tukkomi_img" ref="image-input" v-on:change="onPhotoChanged" ><br>
-                <img id="img-upload" src="images/camera-upload.png" width="100%" ref="img-upload">
+                <img id="img-upload" 
+                v-bind:src="currentImage.length == 0 ? 'images/camera-upload.png' : currentImage"
+                 width="100%" ref="img-upload">
             </div>
 
             <!-- ツッコミを入力 -->
@@ -44,26 +46,32 @@
                 </div>
             </div>
 
-            <div id="tukkomi-submit">
-                <input type="submit" name="" value="ツッコミをお見舞い">
-            </div>
         </form>
-
-        <div class="subheader">
-        </div>
-
-
+          <div id="tukkomi-submit">
+              <button v-on:click="submitTukkomi">
+                ツッコミをお見舞い
+              </button>
+          </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import AppHeader from "./AppHeader.vue";
+import { ApiClient } from "../api/client";
 
 export default Vue.extend({
   name: "AddTukkomi",
   components: {
     AppHeader
+  },
+
+  data() {
+    return {
+      currentImage() {
+        return "";
+      }
+    };
   },
   methods: {
     onPhotoChanged(el) {
@@ -78,10 +86,18 @@ export default Vue.extend({
         event => {
           const base64 = (event.target as any).result;
           (this.$refs["img-upload"] as any).src = base64;
+          this.currentImage = base64;
         },
         false
       );
       reader.readAsDataURL(file);
+    },
+
+    // ツッコミをお見舞いする
+    submitTukkomi() {
+      // APIを呼ぶ
+      const api = new ApiClient();
+      console.log("ツッコミをお見舞いするやで");
     }
   }
 });
@@ -132,10 +148,12 @@ export default Vue.extend({
     }
   }
 }
+
+// ツッコミをお見舞いするボタン
 #tukkomi-submit {
   margin: 10px 0;
 
-  input[type="submit"] {
+  button {
     width: 100%;
     background: orange;
     border: none;
