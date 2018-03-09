@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 
 
 
-function deserializeResponse<T>(response: AxiosResponse< any >): T {
+function deserializeResponse<T>(response: AxiosResponse<any>): T {
     return JSON.parse(response.data as string) as T;
 }
 
@@ -13,10 +13,10 @@ export class ApiClient {
     /**
      * つっこみのデータの一覧を取得
     */
-    async fetchList(lat: number, long: number): Promise < FetchListResponse > {
+    async fetchList(lat: number, long: number): Promise<FetchListResponse> {
         const params = new URLSearchParams();
         params.append("req", "fetch_list");
-        params.append("lat",  String(lat));
+        params.append("lat", String(lat));
         params.append("long", String(long));
 
         const res = await axios.post(this.apiURL, params);
@@ -28,7 +28,7 @@ export class ApiClient {
     /**
      * つっこみの詳細情報を取得
      */
-    async fetchTukkomiDetail(tukkomiId: string): Promise< TukkomiDetail > {
+    async fetchTukkomiDetail(tukkomiId: string): Promise<TukkomiDetail> {
         const res = await axios.post(this.apiURL, {
             req: "fetch_tukkomi_detail"
         });
@@ -41,7 +41,7 @@ export class ApiClient {
      * @param latitude スポットの緯度
      * @param longitude スポットの経度
      */
-    async fetchSameSpot(latitude: number, longitude: number): Promise < FetchSameReponse > {
+    async fetchSameSpot(latitude: number, longitude: number): Promise<FetchSameReponse> {
         const res = await axios.post(this.apiURL, {
             req: "fetch_same"
         });
@@ -61,7 +61,7 @@ export class ApiClient {
         spotLat: number,
         spotLong: number,
         spotImg: string, // Base64文字列
-        spotImgId: string): Promise < boolean > {
+        spotImgId: string): Promise<boolean> {
         const res = await axios.post(this.apiURL, {
             req: "add_tukkomi"
         });
@@ -75,18 +75,18 @@ interface TukkomiItemResponse {
     /**
      * つっこみの内容
      */
-    tukkomi_word: string;
+    content: string;
 
     /**
      * つっこみの画像
      */
-    tukkomi_img: string;
+    photoId: string;
 
     /**
      * つっこみのID
      */
 
-    tukkomi_id: string;
+    tukkomi_id: number;
 
     /**
      * 緯度 -90 ~ 90
@@ -97,6 +97,11 @@ interface TukkomiItemResponse {
      * 経度 -180 ~ 180
      */
     spot_long: number;
+
+    /**
+     * いいねされた数
+     */
+    likes: number;
 }
 
 interface TukkomiDetail {

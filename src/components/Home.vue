@@ -8,11 +8,12 @@
             <p>この辺にあるツッコミポイント</p>
         </div>
         <div>
-          <tukkomi-list-item v-for="item in data"
+          <tukkomi-list-item v-for="item in tukkomiData"
            :subject="item.subject"
             :key="item.id"
             :rank="item.rank"
-            >
+            :image="item.image"
+            :on-tukkomi-detail-button-clicked="tukkomiDetailButton(item.id)">
           </tukkomi-list-item>
         </div>
     </div>
@@ -25,44 +26,60 @@ import AppHeader from "./AppHeader.vue";
 import {} from "@types/googlemaps";
 import { ApiClient } from "../api/client";
 
+interface IData {
+  tukkomiData: Array<{
+    subject: string;
+    id: number;
+    image: string;
+    rank: number;
+  }>;
+}
+
 export default Vue.extend({
   name: "App",
   components: {
     TukkomiListItem,
     AppHeader
   },
-  data() {
+  data(): IData {
     return {
-      data: [
+      tukkomiData: [
         {
-          subject: "普通の家やんけ",
-          id: "001",
-          image: "images/dotonbori_blur.png",
-          rank: 1
-        },
-        {
-          subject: "誰やねんこれ！",
-          id: "002",
-          image: "images/dotonbori_blur.png",
-          rank: 2
-        },
-        {
-          subject: "笑いの殿堂やないか！",
-          id: "003",
-          image: "images/dotonbori_blur.png",
-          rank: 3
-        },
-        {
-          subject: "ありえへんやろ！",
-          id: "004",
-          image: "images/dotonbori_blur.png",
-          rank: 4
+          subject: "ダミーツッコミ",
+          id: 999,
+          image: "images/camera-upload.png",
+          rank: 0
         }
       ]
     };
   },
-  methods: {},
-  mounted() {}
+  methods: {
+    tukkomiDetailButton(tukkomiId: number) {
+      return function() {
+        console.log(`click tukkomi: ${tukkomiId}`);
+      };
+    }
+  },
+  async mounted() {
+    const client = new ApiClient();
+    const currentPosition = await getCurrentPosition();
+    console.log("API 呼び出し中");
+    const response = await client.fetchList(
+      currentPosition.latitude,
+      currentPosition.longitude
+    );
+    console.log("API 呼び出し完了");
+    console.log(response);
+
+    this.$data.tukkomiData = response
+      .sort((a, b) => a.likes - b.likes)
+      .map(x => ({
+        subject: x.content,
+        id: x.tukkomi_id,
+        image: `https://oguemon.com/owarai/img/${x.photoId}.png`,
+        rank: 1
+      }));
+  }
 });
 
 interface GeoPosition {
@@ -70,7 +87,8 @@ interface GeoPosition {
   longitude: number;
 }
 
-const currentPosition = getCurrentPosition().then(result => {
+// 現在地周辺の地図を描画する
+getCurrentPosition().then(result => {
   const { latitude, longitude } = result;
   // 地図の作成
   const map = new google.maps.Map(document.getElementById("google-map"), {
